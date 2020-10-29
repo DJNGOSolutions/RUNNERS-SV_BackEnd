@@ -1,0 +1,8 @@
+#Enviroment variables file
+.env
+
+#File added just to see clearly the folders structure in VS Code
+/controllers/api.js
+
+#Hiding node_modules folder
+/node_modules
