@@ -1,3 +1,4 @@
+const User = require('./../models/User');
 const UserModel = require('./../models/User');
 
 const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,32})");
@@ -48,7 +49,27 @@ UserService.verifyRegistrationFields = ({ firstNames, lastNames, username, email
 
 }
 
-UserService.findOneUsernameOrEmail = async({ username, email }) => {
+UserService.verifyLoginFields = ({ identifier, password }) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+
+    if (!identifier || !password) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: "Missing required field."
+            }
+        }
+
+        return serviceResponse;
+    }
+
+    return serviceResponse
+}
+
+UserService.findOneUsernameOrEmail = async(username, email) => {
     serviceResponse = {
         success: true,
         content: {}
@@ -66,7 +87,7 @@ UserService.findOneUsernameOrEmail = async({ username, email }) => {
                 }
             }
         } else {
-            serviceResponse.content = user;
+            serviceResponse.content = userFound;
         }
     
         return serviceResponse;
@@ -75,7 +96,7 @@ UserService.findOneUsernameOrEmail = async({ username, email }) => {
     }
 }
 
-UserService.register = async ({ firstNames, lastNames, username, email, password, photo }) => {
+UserService.register = async({ firstNames, lastNames, username, email, password, photo }) => {
     let serviceResponse = {
         success: true,
         content: {
@@ -93,7 +114,6 @@ UserService.register = async ({ firstNames, lastNames, username, email, password
             photo
         });
         const newUserWasRegistrated = await newUser.save();
-
         if (!newUserWasRegistrated) {
             serviceResponse = {
                 success: false,
@@ -107,7 +127,6 @@ UserService.register = async ({ firstNames, lastNames, username, email, password
 
         return serviceResponse;
     } catch(error) {
-        console.log(error);
         throw new Error("Internal Server Error.")
     }
 }
