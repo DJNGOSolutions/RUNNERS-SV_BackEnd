@@ -92,7 +92,7 @@ UserService.findOneUsernameOrEmail = async(username, email) => {
     
         return serviceResponse;
     } catch (error) {
-        throw new Error("Internal Server Error.")
+        throw error;
     }
 }
 
@@ -127,7 +127,7 @@ UserService.register = async({ firstNames, lastNames, username, email, password,
 
         return serviceResponse;
     } catch(error) {
-        throw new Error("Internal Server Error.")
+        throw error;
     }
 }
 
