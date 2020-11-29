@@ -1,5 +1,6 @@
-const User = require('./../models/User');
+const { verifyId } = require('../utils/MongoUtils');
 const UserModel = require('./../models/User');
+const GroupModel = require('./../models/Group');
 
 const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,32})");
 const emailRegex = new RegExp("^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$");
@@ -121,8 +122,8 @@ UserService.register = async({ firstNames, lastNames, username, email, password,
                     error: "User could not be registrated."
                 }
             }
-
-            return serviceResponse;
+        } else {
+            serviceResponse.content = newUserWasRegistrated;
         }
 
         return serviceResponse;
@@ -156,6 +157,84 @@ UserService.findOneById = async (_id) => {
         return serviceResponse;
     } catch(error) {
         throw error;
+    }
+}
+
+UserService.joinGroup = async (userId, groupId, accessCode) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+
+    if (!verifyId(userId) && !verifyId(groupId)) {
+        serviceResponse = {
+            success: false,
+            content: 'Invalid id for user or group.'
+        }
+        
+        return serviceResponse;
+    }
+
+    if (!accessCode) {
+        serviceResponse = {
+            success: false,
+            content: 'Missing access code.'
+        }
+        
+        return serviceResponse;
+    }
+
+    try {
+        const user = await UserModel.findOne({ _id: userId });
+        if (!user) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'No user found.'
+                }
+            }
+
+            return serviceResponse;
+        }
+        const group = await GroupModel.findOne({ _id: groupId });
+        if(!group) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'No group found.'
+                }
+            }
+            
+            return serviceResponse;
+        }
+
+        if(!(group.accessCode === accessCode)){
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'Given access code does not match with group access code.'
+                }
+            }
+            
+            return serviceResponse;
+        }
+
+        user.groups.push(groupId);
+        const userUpdated = await user.save();
+        if (!userUpdated) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'User could not be updated.'
+                }
+            }
+        } else {
+            serviceResponse.content = userUpdated;
+        }
+        
+        return serviceResponse;
+    } catch(error) {
+        throw new Error('Internal Server Error.')
     }
 }
 

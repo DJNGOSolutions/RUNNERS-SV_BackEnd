@@ -1,3 +1,4 @@
+const { verifyId } = require('../utils/MongoUtils');
 const GroupModel = require('./../models/Group');
 
 const GroupService = {};
@@ -68,6 +69,86 @@ GroupService.createGroup = async ({ name, description, photo, accessCode }, user
 
     return serviceResponse;
 
+}
+
+GroupService.addMember = async (userId, groupId) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+
+    if (!verifyId(groupId) && !verifyId(groupId)) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: 'Invalid id.'
+            }
+        }
+
+        return serviceResponse;
+    }
+
+    const group = await GroupModel.findOne({ _id: groupId });
+    if (!group) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: 'Group not found.'
+            }
+        }
+
+        return serviceResponse;
+    }
+
+    console.info(group);
+    console.info(group.members);
+    group.members.push(userId);
+    console.info(group);
+    const groupUpdated = await group.save();
+    if (!groupUpdated) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: 'Group could not be updated.'
+            }
+        }
+    } else {
+        serviceResponse.content = groupUpdated;
+    }
+
+    return serviceResponse;
+}
+
+GroupService.findGroupById = async (_id) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+
+    if (!verifyId) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: 'Invalid id.',
+            }
+        }
+
+        return serviceResponse;
+    }
+
+    const group = await GroupModel.findById(_id).exec();
+    if (!group) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: 'Group was not found.'
+            }
+        }
+    } else {
+        serviceResponse.content = group;
+    }
+
+    return serviceResponse;
 }
 
 module.exports = GroupService;

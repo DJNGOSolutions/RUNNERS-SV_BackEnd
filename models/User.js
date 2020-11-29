@@ -28,6 +28,12 @@ const UserSchema = new Schema({
         default: ""
     },
     photo: String,
+    groups: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            rel: 'Group'
+        }]
+    }
 }, {
     timestamps: true
 });
