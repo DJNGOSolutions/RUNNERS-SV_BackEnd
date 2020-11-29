@@ -6,6 +6,11 @@ const GroupSchema = new Schema({
         type: String,
         required: true,
     },
+    description: String,
+    photo: {
+        type: String,
+        default: 'default.png'
+    },
     admins: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
@@ -18,11 +23,10 @@ const GroupSchema = new Schema({
             rel: "User"
         }]
     },
-    description: String,
-    photo: {
+    accessCode: {
         type: String,
-        default: 'default.png'
-    },
+        required: true
+    }
 }, {
     timestamps: true
 });

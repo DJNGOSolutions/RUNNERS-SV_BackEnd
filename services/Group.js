@@ -2,11 +2,11 @@ const GroupModel = require('./../models/Group');
 
 const GroupService = {};
 
-GroupService.createGroup = async ({ name, description, photo }, userId) => {
+GroupService.createGroup = async ({ name, description, photo, accessCode }, userId) => {
     let serviceResponse = {
         success: true,
         content: {
-            message: "New group was created"
+            message: 'New group was created'
         }
     }
 
@@ -21,14 +21,26 @@ GroupService.createGroup = async ({ name, description, photo }, userId) => {
         return serviceResponse;
     }
 
+    if (!accessCode) {
+        serviceResponse = {
+            success: false,
+            content: {
+                error: 'Missing accessCode for the group'
+            }
+        }
+
+        return serviceResponse;
+    }
+
     const admins = [ userId ];
     const members = [ userId ];
     const newGroup = new GroupModel({
         name, 
+        description,
+        photo,
         admins,
         members,
-        description,
-        photo
+        accessCode
     });
     
     if (!newGroup) {
