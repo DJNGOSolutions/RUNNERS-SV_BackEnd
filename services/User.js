@@ -131,4 +131,32 @@ UserService.register = async({ firstNames, lastNames, username, email, password,
     }
 }
 
+UserService.findOneById = async (_id) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+
+    try {
+        const user = await UserModel.findById(_id)
+            .select('-hashedPassword')
+            .exec();
+
+        if (!user) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'User not found.'
+                }
+            }
+        } else {
+            serviceResponse.content = user;
+        }
+
+        return serviceResponse;
+    } catch(error) {
+        throw error;
+    }
+}
+
 module.exports = UserService;
