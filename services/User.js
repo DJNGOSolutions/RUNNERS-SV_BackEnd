@@ -238,6 +238,30 @@ UserService.joinGroup = async (userId, groupId, accessCode) => {
     }
 }
 
-// TODO: All user's group 
+UserService.findAllGroupsForUser = async (_id) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+    try{
+        const user = await UserModel.findOne({ _id: _id });
+
+        if (!user) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'User not found.'
+                }
+            }
+        } else {
+            const groups = await GroupModel.find({ _id: { $in: user.groups } });
+            serviceResponse.content = { groups: groups };
+        }
+
+        return serviceResponse;
+    } catch(error) {
+        throw new Error('Internal Server Error.');
+    }
+}
 
 module.exports = UserService;

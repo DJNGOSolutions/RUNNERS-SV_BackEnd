@@ -25,4 +25,14 @@ UserController.addMemberToGroup = async (req, res) => {
     return res.status(200).json(newMessage);
 }
 
+UserController.findAllGroupsOfUser = async (req, res) => {
+    const findGroups = await UserService.findAllGroupsForUser(req.user._id);
+
+    if (!findGroups.success) {
+        return res.status(404).json(findGroups.content);
+    }
+
+    return res.status(200).json(findGroups.content);
+}
+
 module.exports = UserController;
