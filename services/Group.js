@@ -151,6 +151,29 @@ GroupService.findGroupById = async (_id) => {
     return serviceResponse;
 }
 
-// TODO: find all groups
+GroupService.findAllGroups = async () => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+
+    try {
+        const groups = await GroupModel.find();
+        if (!groups) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'No group found.'
+                }
+            }
+        } else {
+            serviceResponse.content = groups;
+        }
+
+        return serviceResponse;
+    } catch(error) {
+        throw new Error('Internal Server Error.')
+    }
+}
 
 module.exports = GroupService;

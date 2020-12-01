@@ -12,4 +12,14 @@ GroupController.createGroup = async (req, res) => {
     return res.status(201).json(createdGroup.content);
 }
 
+GroupController.getAllGroups = async (req, res) => {
+    const groups = await GroupService.findAllGroups();
+
+    if (!groups.content) {
+        return res.status(404).json(groups.content);
+    }
+
+    return res.status(200).json(groups.content);
+}
+
 module.exports = GroupController;
