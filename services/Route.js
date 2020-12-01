@@ -48,9 +48,9 @@ RouteService.createRoute = async ({ name, startingPoint, finishingPoint, groupId
             finishingPoint,
         });
 
-        route.groups = groupId;
-        const group = await GroupModel.findOne({ _id: groupId });
-        if (!group) {
+        route.group = groupId;
+        const groupFound = await GroupModel.findOne({ _id: groupId });
+        if (!groupFound) {
             serviceResponse = {
                 success: false,
                 content: {
@@ -76,9 +76,12 @@ RouteService.createRoute = async ({ name, startingPoint, finishingPoint, groupId
             serviceResponse.content = routeSaved;
         }
 
-        group.routes.push(routeSaved._id);
+        console.info(routeSaved);
+        console.info(groupFound);
+        groupFound.routes.push(routeSaved._id);
+        console.info(groupFound);
 
-        const groupSaved = await route.save(group);
+        const groupSaved = await groupFound.save();
 
         if (!groupSaved) {
             serviceResponse = {
