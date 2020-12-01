@@ -22,4 +22,14 @@ GroupController.getAllGroups = async (req, res) => {
     return res.status(200).json(groups.content);
 }
 
+GroupController.findGroupRoutes = async (req, res) => {
+    const routes = await GroupService.findGroupRoutes(req.params._id);
+
+    if (!routes.success) {
+        return res.status(404).json(routes.content);
+    }
+
+    return res.status(200).json(routes.content);
+}
+
 module.exports = GroupController;

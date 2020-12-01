@@ -1,5 +1,6 @@
 const { verifyId } = require('../utils/MongoUtils');
 const GroupModel = require('./../models/Group');
+const RouteModel = require('./../models/Route');
 
 const GroupService = {};
 
@@ -173,6 +174,32 @@ GroupService.findAllGroups = async () => {
         return serviceResponse;
     } catch(error) {
         throw new Error('Internal Server Error.')
+    }
+}
+
+GroupService.findGroupRoutes = async (_id) => {
+    let serviceResponse = {
+        success: true,
+        content: {}
+    }
+    try{
+        const group = await GroupModel.findOne({ _id: _id });
+
+        if (!group) {
+            serviceResponse = {
+                success: false,
+                content: {
+                    error: 'Group not found.'
+                }
+            }
+        } else {
+            const routes = await RouteModel.find({ _id: { $in: group.routes } });
+            serviceResponse.content = { routes: routes };
+        }
+
+        return serviceResponse;
+    } catch(error) {
+        throw new Error('Internal Server Error.');
     }
 }
 
