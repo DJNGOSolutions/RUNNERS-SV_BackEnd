@@ -211,6 +211,7 @@ UserService.joinGroup = async (userId, groupId, accessCode) => {
         if(!(group.accessCode === accessCode)){
             serviceResponse = {
                 success: false,
+                accessCode: false,
                 content: {
                     error: 'Given access code does not match with group access code.'
                 }
