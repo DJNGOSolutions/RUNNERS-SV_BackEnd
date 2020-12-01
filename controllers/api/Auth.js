@@ -1,4 +1,5 @@
 const UserService = require('../../services/User');
+const tools = require('../../utils/MongoUtils');
 const { createToken } = require('./../../utils/JWTUtils');
 
 const AuthController = {};
@@ -56,9 +57,10 @@ AuthController.login = async (req, res) => {
             })
         }
 
-        return res.status(200).json({
-            token: createToken(user._id)
-        })
+        token = createToken(user._id)
+        userExists.content.token = token
+
+        return res.status(200).json(userExists.content);
     } catch(error) {
         return res.status(500).json({
             error: "Internal Server Error."

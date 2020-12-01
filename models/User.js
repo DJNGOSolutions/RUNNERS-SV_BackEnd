@@ -28,6 +28,10 @@ const UserSchema = new Schema({
         default: ""
     },
     photo: String,
+    token: {
+        type: String,
+        default: ""
+    },
     groups: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
