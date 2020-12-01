@@ -151,4 +151,6 @@ GroupService.findGroupById = async (_id) => {
     return serviceResponse;
 }
 
+// TODO: find all groups
+
 module.exports = GroupService;

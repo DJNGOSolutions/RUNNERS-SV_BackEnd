@@ -238,4 +238,6 @@ UserService.joinGroup = async (userId, groupId, accessCode) => {
     }
 }
 
+// TODO: All user's group 
+
 module.exports = UserService;

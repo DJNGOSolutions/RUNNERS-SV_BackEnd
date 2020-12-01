@@ -23,6 +23,12 @@ const GroupSchema = new Schema({
             rel: "User"
         }]
     },
+    routes: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            rel: "Route"
+        }]
+    },
     accessCode: {
         type: String,
         required: true
