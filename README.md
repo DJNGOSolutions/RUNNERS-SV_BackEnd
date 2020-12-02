@@ -18,3 +18,12 @@ npm start
 ```
 
 Para más información sobre las rutas para consumir de la API revisar el siguiente [enlace](https://github.com/DJNGOSolutions/RUNNERS-SV_BackEnd/wiki).
+
+### TODOs:
+- Hacer administrador a un integrante de un grupo.
+- Actualización de datos usuarios.
+- Actualización de datos grupos.
+- Actualización de datos de ruta.
+- Eliminación de usuarios.
+- Eliminación de grupos.
+- Eliminación de rutas.
