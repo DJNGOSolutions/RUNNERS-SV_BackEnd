@@ -7,7 +7,7 @@ UserController.addMemberToGroup = async (req, res) => {
     const { userId, groupId, accessCode } = req.body;
 
     const memberJoinedToGroup = await UserService.joinGroup(userId, groupId, accessCode);
-    if (!memberJoinedToGroup.accessCode) {
+    if (memberJoinedToGroup.accessCodeFailed && !memberJoinedToGroup.success) {
         return res.status(403).json(memberJoinedToGroup.content);
     }
     if (!memberJoinedToGroup.success) {
